@@ -6,5 +6,6 @@ keys = {
     'доллар': 'USD',
     'фунт': 'GBP'
 }
+API_key = '067dde6e4b4a9e40e977e3a295d2147e'
 
-
+url = 'http://api.exchangeratesapi.io/v1/latest'

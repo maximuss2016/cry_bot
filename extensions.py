@@ -1,6 +1,6 @@
 import requests
 import json
-from config import keys
+from config import keys, API_key, url
 
 
 class APIException(Exception):
@@ -28,8 +28,14 @@ class Converter:
         except ValueError:
             raise APIException(f'Не удалось обработать количество {amount}')
 
-        r = requests.get(f'https://api.exchangeratesapi.io/v1/latest?access_key\
-        =067dde6e4b4a9e40e977e3a295d2147e&symbols={quote_ticker}&base={base_ticker}')
+        r = requests.get(f'{url}?access_key={API_key}&symbols={quote_ticker}')
+        r1 = requests.get(f'{url}?access_key={API_key}&symbols={base_ticker}')
+        if base_ticker == "EUR":
+            total_base = json.loads(r.content)['rates'][quote_ticker] * amount
 
-        total_base = (json.loads(r.content)['rates'][keys[quote]]) * amount
-        return total_base
+        else:
+            A = json.loads(r1.content)['rates'][base_ticker]
+            B = json.loads(r.content)['rates'][quote_ticker]
+            total_base = (B / A) * amount
+
+        return round(total_base, 2)
